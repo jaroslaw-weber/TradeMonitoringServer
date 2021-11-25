@@ -42,8 +42,8 @@ namespace stock_price_app_server.Controllers
 		}
 		private async Task StartSendingData(HttpContext context, WebSocket webSocket)
 		{
-			var buffer = new byte[1024 * 4];
-			WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+			//var buffer = new byte[1024 * 4];
+			//WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
 			_logger.Log(LogLevel.Information, "received message from client");
 
@@ -63,7 +63,7 @@ namespace stock_price_app_server.Controllers
 			}
 
 
-			await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+			//await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
 		}
 
 	}
