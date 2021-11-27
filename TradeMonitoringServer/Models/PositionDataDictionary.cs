@@ -24,7 +24,12 @@ namespace TradeMonitoringServer
 
         public PositionDataDictionary Clone()
         {
-            return (PositionDataDictionary)this.ToDictionary(x => x.Key, y => y.Value.Clone());
+            var d = new PositionDataDictionary();
+            foreach(var item in this)
+            {
+                d[item.Key] = item.Value.Clone();
+            }
+            return d;
         }
     }
 }
