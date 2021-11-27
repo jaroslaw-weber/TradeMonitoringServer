@@ -11,8 +11,10 @@
     <None Remove="Swashbuckle.AspNetCore.SwaggerGen" />
     <None Remove="Microsoft.AspNetCore.Http" />
     <None Remove="Responses\" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messages\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>

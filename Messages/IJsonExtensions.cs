@@ -16,7 +16,7 @@ namespace TradeMonitoringServer
         {
             var message = response.ToJson();
 
-            logger.LogDebug("sending message: " + message);
+            logger.LogInformation("sending message: " + message);
 
             var content = StringToArraySegment(message);
             await webSocket.SendAsync(content, WebSocketMessageType.Text, true, CancellationToken.None);

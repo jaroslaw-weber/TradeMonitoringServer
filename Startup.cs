@@ -12,6 +12,9 @@ namespace TradeMonitoringServer
 {
     public class Startup
     {
+
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,9 +28,11 @@ namespace TradeMonitoringServer
             services.AddRazorPages();
         }
 
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -48,8 +53,10 @@ namespace TradeMonitoringServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapRazorPages();
             });
+            var tradeSim = new TradeSimulationService();
+            
+            Task.Run(() => tradeSim.StartSimulation());
         }
     }
 }

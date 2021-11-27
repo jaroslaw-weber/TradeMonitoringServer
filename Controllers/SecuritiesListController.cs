@@ -2,18 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 using System.Net;
 using Microsoft.Extensions.Logging;
-using System.Text;
 using System.Threading.Tasks;
-using System;
-using System.Threading;
 using Microsoft.AspNetCore.Http;
-using TestWebAppDotNet;
-using System.Text.Json;
 
 namespace TradeMonitoringServer.Controllers
 {
 
-	[ApiController]
+    [ApiController]
 	[Route("[controller]")]
 	public class SecuritiesListController : ControllerBase
 	{
@@ -31,7 +26,7 @@ namespace TradeMonitoringServer.Controllers
 		[HttpGet("/securities-list")]
 		public async Task Get()
 		{
-			_logger.Log(LogLevel.Information, "accessing securities list");
+			_logger.LogInformation("accessing securities list");
 
 			//only allows websockets
 			if (!HttpContext.WebSockets.IsWebSocketRequest)
@@ -42,7 +37,7 @@ namespace TradeMonitoringServer.Controllers
 
 			using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
 
-			_logger.Log(LogLevel.Information, "connected to websocket");
+			_logger.LogInformation("connected to websocket");
 
 			await PushUpdateEverySecond(HttpContext, webSocket);
 			

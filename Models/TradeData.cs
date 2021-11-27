@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Text.Json;
 
 namespace TradeMonitoringServer
 {
@@ -20,6 +20,12 @@ namespace TradeMonitoringServer
         /// Type of the trade (sell/buy)
         /// </summary>
         public TradeType TradeType { get; set; }
+
+
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 
 }

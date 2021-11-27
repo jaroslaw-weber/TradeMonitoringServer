@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace TradeMonitoringServer
 {
@@ -12,6 +13,12 @@ namespace TradeMonitoringServer
     /// </summary>
     public class TradeSimulation
     {
+        /// <summary>
+        /// Creating only one instance of simulation,
+        /// so each user connecting to the server will have same result.
+        /// </summary>
+        public static TradeSimulation? Instance;
+
         public Random random = new Random();
 
         List<TradeData> trades = new();
@@ -35,8 +42,12 @@ namespace TradeMonitoringServer
         /// <returns></returns>
         private int GetPositionsLength() => FakeTickerNames.Length;
 
-        public TradeSimulation()
+        private ILogger<TradeSimulation>? logger;
+
+
+        private void Initialize()
         {
+
             var length = GetPositionsLength();
             for (int i = 0; i < length; i++)
             {
@@ -45,6 +56,17 @@ namespace TradeMonitoringServer
                 startOfTheDayState[id] = position;
                 CurrentPositionsState[id] = position;
             }
+        }
+
+        public TradeSimulation()
+        {
+            var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            });
+            this.logger = loggerFactory.CreateLogger<TradeSimulation>();
+            logger?.LogInformation("created trade simulation logger");
+            Initialize();
         }
 
         /// <summary>
@@ -73,7 +95,9 @@ namespace TradeMonitoringServer
         public void SimulateTrade()
         {
             var trade = GetNewFakeTrade();
+            logger?.LogInformation("new trade: " + trade.ToJson());
             trades.Add(trade);
+
             RecalculateCurrentState();
         }
 
@@ -145,7 +169,8 @@ namespace TradeMonitoringServer
         private PositionData GetRandomPosition()
         {
             var index = random.Next(0, startOfTheDayState.Count);
-            return CurrentPositionsState[index];
+            int id = index + 1;
+            return CurrentPositionsState[id];
         }
     }
 }
