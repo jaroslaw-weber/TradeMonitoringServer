@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace TestWebAppDotNet
+namespace TradeMonitoringServer
 {
     public class Startup
     {

@@ -4,11 +4,15 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>stock_price_app_server</RootNamespace>
+    <RootNamespace>TradeMonitoringServer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Swashbuckle.AspNetCore.SwaggerGen" />
     <None Remove="Microsoft.AspNetCore.Http" />
+    <None Remove="Responses\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages\" />
   </ItemGroup>
 </Project>

@@ -11,8 +11,16 @@ namespace TestWebAppDotNet
 {
     public class Program
     {
+        /// <summary>
+        /// Use static to create only one instance of simulation,
+        /// so each user connecting to the server will have same result.
+        /// </summary>
+        public static TradeSimulation TradeSimulation = new TradeSimulation();
+
         public static void Main(string[] args)
         {
+            Task.Run(() => SimulateTrades());
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -22,5 +30,16 @@ namespace TestWebAppDotNet
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+
+        private static async Task SimulateTrades()
+        {
+            while (true)
+            {
+                int waitTime =TradeSimulation.GetRandomWaitTime();
+                await Task.Delay(waitTime);
+                TradeSimulation.SimulateTrade();
+            }
+        }
     }
 }

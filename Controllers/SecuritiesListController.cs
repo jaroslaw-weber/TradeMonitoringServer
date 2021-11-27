@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using System;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using TestWebAppDotNet;
+using System.Text.Json;
 
-namespace stock_price_app_server.Controllers
+namespace TradeMonitoringServer.Controllers
 {
 
 	[ApiController]
@@ -17,54 +19,58 @@ namespace stock_price_app_server.Controllers
 	{
 		private readonly ILogger<SecuritiesListController> _logger;
 
+
 		public SecuritiesListController(ILogger<SecuritiesListController> logger)
 		{
 			_logger = logger;
 		}
 
+		/// <summary>
+        /// After connecting to this socket, servers push position list to client every second
+        /// </summary>
 		[HttpGet("/securities-list")]
 		public async Task Get()
 		{
 			_logger.Log(LogLevel.Information, "accessing securities list");
 
-			if (HttpContext.WebSockets.IsWebSocketRequest)
-			{
-				using WebSocket webSocket = await
-								   HttpContext.WebSockets.AcceptWebSocketAsync();
+			//only allows websockets
+			if (!HttpContext.WebSockets.IsWebSocketRequest)
+            {
+				OnInvalidRequest();
+				return;
+            }
 
-				_logger.Log(LogLevel.Information, "connected to websocket");
-				await StartSendingData(HttpContext, webSocket);
-			}
-			else
-			{
-				HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-			}
+			using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+
+			_logger.Log(LogLevel.Information, "connected to websocket");
+
+			await PushUpdateEverySecond(HttpContext, webSocket);
+			
 		}
-		private async Task StartSendingData(HttpContext context, WebSocket webSocket)
+
+		private void OnInvalidRequest()=> HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+		/// <summary>
+		/// Every second gets positions data and send them to client
+		/// </summary>
+		private async Task PushUpdateEverySecond(HttpContext context, WebSocket webSocket)
 		{
-			//var buffer = new byte[1024 * 4];
-			//WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-			_logger.Log(LogLevel.Information, "received message from client");
-
 			while (true)
 			{
-				var message = DateTime.Now.ToString();
-				var encoded = Encoding.UTF8.GetBytes(message);
-
-				var content = new ArraySegment<Byte>(encoded, 0, encoded.Length);
-				await webSocket.SendAsync(content, WebSocketMessageType.Text, true, CancellationToken.None);
-				/*var content = new ArraySegment<byte>(buffer, 0, result.Count, result.MessageType, result.EndOfMessage, CancellationToken.None);
-				await webSocket.SendAsync(content);
-				*/
-				_logger.Log(LogLevel.Information, "sent message to client!");
-
-				await Task.Delay(1000);
+				await PushDataToClient(webSocket);
+				await WaitForNextUpdate();
 			}
-
-
-			//await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
 		}
+
+        private async Task PushDataToClient(WebSocket webSocket)
+        {
+			var response = new PositionListMessage();
+            await response.PushMessageToClient(webSocket, _logger);
+        }
+
+        private async Task WaitForNextUpdate() => await Task.Delay(1000);
+		
+
 
 	}
 
