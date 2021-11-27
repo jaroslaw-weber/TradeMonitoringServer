@@ -19,3 +19,4 @@ dotnet test
 ### TODO
 Things I did not have time to implement but could use improvement:
 - stop pushing updates to client when client disconnects
+- write more tests
