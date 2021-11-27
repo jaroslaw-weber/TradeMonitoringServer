@@ -7,14 +7,19 @@
     <RootNamespace>TradeMonitoringServer</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'stock_price_app_server' " />
   <ItemGroup>
     <None Remove="Swashbuckle.AspNetCore.SwaggerGen" />
     <None Remove="Microsoft.AspNetCore.Http" />
     <None Remove="Responses\" />
     <None Remove="Services\" />
+    <None Remove="Interfaces\" />
+    <None Remove="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messages\" />
     <Folder Include="Services\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

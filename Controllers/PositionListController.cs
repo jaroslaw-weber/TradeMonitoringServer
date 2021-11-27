@@ -10,12 +10,12 @@ namespace TradeMonitoringServer.Controllers
 
     [ApiController]
 	[Route("[controller]")]
-	public class SecuritiesListController : ControllerBase
+	public class PositionListController : ControllerBase
 	{
-		private readonly ILogger<SecuritiesListController> _logger;
+		private readonly ILogger<PositionListController> _logger;
 
 
-		public SecuritiesListController(ILogger<SecuritiesListController> logger)
+		public PositionListController(ILogger<PositionListController> logger)
 		{
 			_logger = logger;
 		}
@@ -23,27 +23,30 @@ namespace TradeMonitoringServer.Controllers
 		/// <summary>
         /// After connecting to this socket, servers push position list to client every second
         /// </summary>
-		[HttpGet("/securities-list")]
+		[HttpGet("/position-list")]
 		public async Task Get()
-		{
-			_logger.LogInformation("accessing securities list");
+        {
+            _logger.LogInformation("accessing securities list");
 
-			//only allows websockets
-			if (!HttpContext.WebSockets.IsWebSocketRequest)
+            //only allows websockets
+            if (!HttpContext.WebSockets.IsWebSocketRequest)
             {
-				OnInvalidRequest();
-				return;
+                OnInvalidRequest();
+                return;
             }
+            WebSocket webSocket = await WaitForSocketConnection();
+            _logger.LogInformation("connected to websocket");
 
-			using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+            await PushUpdateEverySecond(HttpContext, webSocket);
 
-			_logger.LogInformation("connected to websocket");
+        }
 
-			await PushUpdateEverySecond(HttpContext, webSocket);
-			
-		}
+        private async Task<WebSocket> WaitForSocketConnection()
+        {
+            return await HttpContext.WebSockets.AcceptWebSocketAsync();
+        }
 
-		private void OnInvalidRequest()=> HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        private void OnInvalidRequest()=> HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
 		/// <summary>
 		/// Every second gets positions data and send them to client
@@ -57,6 +60,9 @@ namespace TradeMonitoringServer.Controllers
 			}
 		}
 
+		/// <summary>
+        /// Send position info to connected client
+        /// </summary>
         private async Task PushDataToClient(WebSocket webSocket)
         {
 			var response = new PositionListMessage();

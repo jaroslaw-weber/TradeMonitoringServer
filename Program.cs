@@ -10,7 +10,6 @@ namespace TradeMonitoringServer
 
         public static void Main(string[] args)
         {
-
             var builder = CreateHostBuilder(args);
             var host = builder.Build();
 
@@ -18,13 +17,14 @@ namespace TradeMonitoringServer
         }
 
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var builder = Host.CreateDefaultBuilder(args);
+            return builder.ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+        }
     }
 
 }

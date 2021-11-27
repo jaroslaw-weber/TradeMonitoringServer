@@ -12,9 +12,6 @@ namespace TradeMonitoringServer
 {
     public class Startup
     {
-
-
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -54,8 +51,9 @@ namespace TradeMonitoringServer
             {
                 endpoints.MapControllers();
             });
+
+            //run trade simulation in the background
             var tradeSim = new TradeSimulationService();
-            
             Task.Run(() => tradeSim.StartSimulation());
         }
     }

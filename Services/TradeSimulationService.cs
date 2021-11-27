@@ -4,6 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace TradeMonitoringServer
 {
+    /// <summary>
+    /// Service responsible for running TradeSimulation
+    /// </summary>
     public class TradeSimulationService
     {
         public async Task StartSimulation()

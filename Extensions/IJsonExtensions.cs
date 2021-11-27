@@ -10,7 +10,7 @@ namespace TradeMonitoringServer
     public static class IJsonExtensions
     {
         /// <summary>
-        /// Push data to client
+        /// Convert data to Json and send to client
         /// </summary>
         public static async Task PushMessageToClient(this IJson response, WebSocket webSocket, ILogger logger)
         {
@@ -20,6 +20,7 @@ namespace TradeMonitoringServer
 
             var content = StringToArraySegment(message);
             await webSocket.SendAsync(content, WebSocketMessageType.Text, true, CancellationToken.None);
+
             logger.LogDebug("sent message to client!" + message);
         }
 

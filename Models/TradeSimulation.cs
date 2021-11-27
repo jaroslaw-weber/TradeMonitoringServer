@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 
 namespace TradeMonitoringServer
 {
+    //todo refactor: split simulation part from calculations
+
     /// <summary>
     /// Simulating selling and buying positions
     /// Saves trades history, current states of postitions and state at the start of the day
@@ -27,12 +29,12 @@ namespace TradeMonitoringServer
         /// state of positions at the start of the day (before any trades)
         /// key: position id
         /// </summary>
-        Dictionary<int, PositionData> startOfTheDayState = new();
+        PositionDataDictionary startOfTheDayState = new();
 
         /// <summary>
         /// state of positions (currently)
         /// key: position id
-        public Dictionary<int, PositionData> CurrentPositionsState { get; set; } = new();
+        public PositionDataDictionary CurrentPositionsState { get; set; } = new();
 
         string[] FakeTickerNames = new[] { "AAPL", "INTL", "MSFT", "AMD", "LOGI", "CRSR", "NVDA", "CAT" };
 
@@ -107,22 +109,11 @@ namespace TradeMonitoringServer
         private void RecalculateCurrentState()
         {
             //copy start of the day positions
-            CurrentPositionsState = startOfTheDayState.ToDictionary(x => x.Key, y => (PositionData)y.Value.Clone());
+            CurrentPositionsState = startOfTheDayState.Clone();
             //apply trades
             foreach (var trade in trades)
             {
-                var position = CurrentPositionsState[trade.PositionId];
-                switch (trade.TradeType)
-                {
-                    case TradeType.Buy:
-                        position.CurrentQuantity += trade.Quantity;
-                        continue;
-                    case TradeType.Sell:
-                        position.CurrentQuantity -= trade.Quantity;
-                        continue;
-                    default: throw new System.SystemException("invalid trade type");
-
-                }
+                CurrentPositionsState.ApplyTrade(trade);
             }
 
         }
