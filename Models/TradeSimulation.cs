@@ -51,7 +51,7 @@ namespace TradeMonitoringServer
         /// Randomizes wait time between trades
         /// </summary>
         /// <returns>Miliseconds to wait</returns>
-        public int GetRandomWaitTime() => random.Next(300, 3000);
+        public int GetRandomWaitTime() => random.Next(100, 900);
 
         private PositionData CreateFakePosition(int id)
         {
