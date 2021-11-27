@@ -7,17 +7,25 @@ namespace TradeMonitoringServer
     /// <summary>
     /// Service responsible for running TradeSimulation
     /// </summary>
-    public class TradeSimulationService
+    public static class TradeSimulationService
     {
-        public async Task StartSimulation()
+        private static bool isRunning { get; set; }
+
+        public static async Task StartSimulation()
         {
+            isRunning = true;
             TradeSimulation.Instance = new TradeSimulation();
-            while (true)
+            while (isRunning)
             {
                 int waitTime = TradeSimulation.Instance.GetRandomWaitTime();
                 await Task.Delay(waitTime);
                 TradeSimulation.Instance.SimulateTrade();
             }
+        }
+
+        public static void StopSimulation()
+        {
+            isRunning = false;
         }
     }
 }

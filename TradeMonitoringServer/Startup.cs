@@ -53,8 +53,7 @@ namespace TradeMonitoringServer
             });
 
             //run trade simulation in the background
-            var tradeSim = new TradeSimulationService();
-            Task.Run(() => tradeSim.StartSimulation());
+            Task.Run(() => TradeSimulationService.StartSimulation());
         }
     }
 }
