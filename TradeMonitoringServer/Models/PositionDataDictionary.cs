@@ -9,6 +9,7 @@ namespace TradeMonitoringServer
         public void ApplyTrade(TradeData trade)
         {
             var position = this[trade.PositionId];
+            position.QuantityTraded += trade.Quantity;
             switch (trade.TradeType)
             {
                 case TradeType.Buy:

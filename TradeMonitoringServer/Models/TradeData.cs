@@ -13,7 +13,7 @@ namespace TradeMonitoringServer
         /// </summary>
         public int PositionId { get; set; }
         /// <summary>
-        /// How much is selling/buying
+        /// How many shares is selling/buying
         /// </summary>
         public int Quantity { get; set; }
         /// <summary>
