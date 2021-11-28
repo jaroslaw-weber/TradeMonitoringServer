@@ -8,6 +8,7 @@ namespace TradeMonitoringServer
         public int Price { get; set; }
         public string? Ticker { get; set; }
         public int CurrentQuantity { get; set; }
+        public int DayStartQuantity { get; set; }
 
         public PositionData Clone()
         {

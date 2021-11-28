@@ -20,3 +20,5 @@ dotnet test
 Things I did not have time to implement but could use improvement:
 - stop pushing updates to client when client disconnects
 - write more tests
+- specify port in config
+- add gif to readme showing functionality

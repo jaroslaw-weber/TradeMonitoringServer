@@ -83,6 +83,7 @@ namespace TradeMonitoringServer
             position.Id = id;
             position.Ticker = FakeTickerNames[id - 1];
             position.CurrentQuantity = GetRandomPositonQuantity();
+            position.DayStartQuantity = position.CurrentQuantity;
             position.Price = GetRandomPositionPrice();
             return position;
         }
@@ -104,7 +105,7 @@ namespace TradeMonitoringServer
         }
 
         /// <summary>
-        /// calculate current state of positions based on trades
+        /// Calculate current state of positions based on trades
         /// </summary>
         private void RecalculateCurrentState()
         {
@@ -115,7 +116,31 @@ namespace TradeMonitoringServer
             {
                 CurrentPositionsState.ApplyTrade(trade);
             }
+            //simulate price change
+            ApplyRandomPriceFluctuations();
 
+        }
+
+        /// <summary>
+        /// Simulate price change
+        /// </summary>
+        private void ApplyRandomPriceFluctuations()
+        {
+            foreach(var pair in CurrentPositionsState)
+            {
+                var price = pair.Value.Price;
+                pair.Value.Price = GetNewPrice(price);
+            }
+        }
+
+        private int GetNewPrice(int oldPrice)
+        {
+            //price not always change!
+            if (random.NextDouble() > 0.5) return oldPrice;
+            //dont let price be negative
+            if (oldPrice < 100) return oldPrice + random.Next(2, 4);
+            //randomly change price a bit;
+            return oldPrice + random.Next(-2, 2);
         }
 
         private TradeData GetNewFakeTrade()
