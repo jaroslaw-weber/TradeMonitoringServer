@@ -4,6 +4,10 @@ Simulate executing and monitoring trades of securities (server-side). When conne
 
 All data is fake but is made to look natural (random trades executed at random times, updating the position list)
 
+## Preview
+
+![preview gif loading...](showcase.gif)
+
 ### How to run
 
 ```
