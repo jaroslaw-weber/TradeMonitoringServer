@@ -10,27 +10,22 @@ namespace TradeMonitoringServer.Tests
         [Fact]
         public void ApplyBuyTradeTest()
         {
-            //create dummy trade
-            var trade = new TradeData();
-            trade.Id = 1;
-            trade.PositionId = 1;
-            trade.Quantity = 100;
-            trade.TradeType = TradeType.Buy;
-
             //create dummy positions
             var dict = new PositionDataDictionary();
-            var position = new PositionData();
-            position.Id = 1;
-            position.CurrentQuantity = 100;
+            var position = PositionData.CreateDummy(1);
             dict[position.Id] = position;
+            var positionClone = position.Clone();
+
+            //create dummy trade
+            var trade = TradeData.CreateDummy(1, position);
 
             //apply
             dict.ApplyTrade(trade);
 
             //test if changed correctly
-            int quantity = dict[position.Id].CurrentQuantity;
-            int testQuantity = 200;
-            Assert.Equal(quantity, testQuantity);
+            Assert.NotEqual(position.CurrentQuantity, positionClone.CurrentQuantity);
+            Assert.NotEqual(position.QuantityTraded, positionClone.QuantityTraded);
+            Assert.Equal(position.DayStartQuantity, positionClone.DayStartQuantity);
         }
     }
 }

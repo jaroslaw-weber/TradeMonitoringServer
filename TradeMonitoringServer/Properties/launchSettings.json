@@ -17,11 +17,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "stock_price_app_server": {
+    "TradeMonitoringServer": {
       "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "http://localhost:5295/securities-list",
-      "applicationUrl": "http://localhost:5295",
+      "applicationUrl": "http://localhost:6000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

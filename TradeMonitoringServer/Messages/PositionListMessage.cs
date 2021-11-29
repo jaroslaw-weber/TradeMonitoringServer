@@ -10,8 +10,8 @@ namespace TradeMonitoringServer
     /// </summary>
     public class PositionListMessage : IJson
     {
-        public DateTime Timestamp { get; set; }
-        public PositionData[]? Positions { get; set; }
+        public DateTime Timestamp { get; private set; }
+        public PositionData[]? Positions { get; private set; }
 
         public PositionListMessage()
         {

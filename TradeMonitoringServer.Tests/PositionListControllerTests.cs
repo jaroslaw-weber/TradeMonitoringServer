@@ -18,7 +18,7 @@ namespace TradeMonitoringServer.Tests
         private  ILogger<PositionListControllerTests> logger;
         private CancellationToken serverCancellationToken;
         private CancellationToken clientCancellationToken;
-        private const int port = 5000;
+        private const int port = 6000;
 
         public PositionListControllerTests()
         {
@@ -46,9 +46,9 @@ namespace TradeMonitoringServer.Tests
         private async Task ConnectToServer()
         {
             logger.LogInformation("test: connecting to server");
-            var uriString = $"ws://localhost:{port}/position-list";
+            var uriString = $"ws://localhost:{port}/positions";
             var uri = new System.Uri(uriString);
-            logger.LogInformation("test: connecting to server");
+            logger.LogInformation("test: connecting to server: "+uriString);
             await client.ConnectAsync(uri, clientCancellationToken);
             logger.LogInformation("test: connected to server");
             //wait for data from server
